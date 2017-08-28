@@ -1,0 +1,56 @@
+#!/bin/bash
+
+set -eu
+
+show_help() {
+  cat <<EOF
+
+Usage: bin/datasets TYPE
+
+Types:
+
+  livedoor_news - livedoorニュースコーパス
+                  https://www.rondhuit.com/download.html#ldcc
+
+EOF
+}
+
+download_livedoor_news() {
+  set -eu
+
+  echo "Start to download livedoor news corups."
+
+  url="https://www.rondhuit.com/download/ldcc-20140209.tar.gz"
+  datadir=$basedir/data/livedoor_news
+  archive=$datadir/livedoor_news.tar.gz
+  if [[ -f $archive ]]; then
+    echo "Already exists!"
+    exit
+  fi
+
+  [[ -d $datadir ]] || mkdir -p $datadir
+  echo -n "Downloading livedoor News Corpus..."
+  curl -s -o $datadir/livedoor_news.tar.gz $url
+  tar zxf $datadir/livedoor_news.tar.gz -C $datadir
+  echo " Success!"
+}
+
+if [ -z "${1+x}" ]; then
+  echo "You need to specify TYPE"
+  show_help
+  exit 1
+fi
+
+cmd=$1
+shift
+
+basedir=$(dirname $(cd $(dirname $0) && pwd))
+
+case $cmd in
+  livedoor_news)
+    download_livedoor_news
+    ;;
+  *)
+    show_help
+    ;;
+esac
