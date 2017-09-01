@@ -31,10 +31,11 @@ class LivedoorNewsArticle(object):
 class LivedoorNewsParser(object):
     """Parser for livedoor news corpus."""
 
-    def __init__(self, cleaner=None, normalizer=None):
+    def __init__(self, cleaner=None, normalizer=None, segmenter=None):
         """init."""
         self.cleaner = cleaner
         self.normalizer = normalizer
+        self.segmenter = segmenter
 
     def parse(self, text, category=None):
         """Parse raw corpus into LivedoorNewsArticle object."""
@@ -42,7 +43,7 @@ class LivedoorNewsParser(object):
         url = lines[0]
         timestamp = datetime.strptime(lines[1], "%Y-%m-%dT%H:%M:%S%z")
         title = self._preprocess(lines[2])
-        content = self._preprocess(lines[3:])
+        content = self._segment(self._preprocess("\n".join(lines[3:])))
 
         return LivedoorNewsArticle(
             category=category,
@@ -62,6 +63,12 @@ class LivedoorNewsParser(object):
             result = self.normalizer.normalize(text)
 
         return result
+
+    def _segment(self, content):
+        if self.segmenter:
+            return self.segmenter.segment(content)
+        else:
+            return content.splitlines()
 
 
 class LivedoorNewsCorpus(object):
