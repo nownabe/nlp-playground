@@ -57,10 +57,10 @@ class LivedoorNewsParser(object):
         result = text
 
         if self.cleaner:
-            result = self.cleaner.clean(text)
+            result = self.cleaner.clean(result)
 
         if self.normalizer:
-            result = self.normalizer.normalize(text)
+            result = self.normalizer.normalize(result)
 
         return result
 
