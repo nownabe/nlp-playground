@@ -4,10 +4,11 @@ import re
 
 from itertools import chain
 
-# TODO: 改行を無視して文を継続させる末尾記号
+# TODO(nownabe): 改行を無視して文を継続させる末尾記号
 # 例:
 #   それについても、
 #   「ほげほげ」とはほげさん。
+
 
 class Basic(object):
     """Basic segmenter."""
@@ -89,4 +90,3 @@ class Basic(object):
     def _close(self):
         self.depth_in_brackets -= 1
         self.brackets.pop()
-
