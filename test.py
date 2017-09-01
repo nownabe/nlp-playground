@@ -4,12 +4,18 @@ import datasets.livedoor_news as ln
 
 from preprocessor import cleaner
 from preprocessor import normalizer
+from preprocessor import segmenter
 
 cleaner = cleaner.Basic()
 normalizer = normalizer.Basic()
+segmenter = segmenter.Basic()
 
 nothing = ln.load("data", parse=True)
-corpus = ln.load("data", parse=True, cleaner=cleaner, normalizer=normalizer)
+corpus = ln.load("data",
+                 parse=True,
+                 cleaner=cleaner,
+                 normalizer=normalizer,
+                 segmenter=segmenter)
 
 for cat in corpus.categories:
     for i in range(10):

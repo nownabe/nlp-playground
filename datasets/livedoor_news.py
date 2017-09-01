@@ -6,9 +6,9 @@ import re
 from datetime import datetime
 
 
-def load(directory, parse=False, cleaner=None, normalizer=None):
+def load(directory, parse=False, cleaner=None, normalizer=None, segmenter=None):
     """Load livedoor news corpus."""
-    return LivedoorNewsCorpus(directory, parse, cleaner, normalizer)
+    return LivedoorNewsCorpus(directory, parse, cleaner, normalizer, segmenter)
 
 
 class LivedoorNewsArticle(object):
@@ -77,12 +77,13 @@ class LivedoorNewsCorpus(object):
     DIRECTORY_PREFIX = "livedoor_news/text"
     IGNORE_RE = re.compile("LICENSE")
 
-    def __init__(self, directory, parse=False, cleaner=None, normalizer=None):
+    def __init__(self, directory, parse=False, cleaner=None, normalizer=None, segmenter=None):
         """init."""
         self.directory = directory
         self.parse = parse
         self.cleaner = cleaner
         self.normalizer = normalizer
+        self.segmenter = segmenter
 
         self.base_path = os.path.join(directory, self.DIRECTORY_PREFIX)
         self.categories = self._get_categories()
@@ -113,7 +114,8 @@ class LivedoorNewsCorpus(object):
         self.articles = {}
         parser = LivedoorNewsParser(
             cleaner=self.cleaner,
-            normalizer=self.normalizer
+            normalizer=self.normalizer,
+            segmenter=self.segmenter,
         )
 
         for c in self.categories:
