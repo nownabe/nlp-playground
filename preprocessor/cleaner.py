@@ -9,8 +9,10 @@ class Basic(object):
     REPLACE_PATTERNS = [
         (r"^[ \t\r\f\v\u3000]+", re.MULTILINE, ""),
         (r"[ \t\r\f\v\u3000]+$", re.MULTILINE, ""),
-        (r"^[・■]\s*", re.MULTILINE, ""),
+        (r"^[・■※]\s*", re.MULTILINE, ""),
         (r"https?://[^\s]+", 0, ""),
+        (r"[\-0-9a-zA-Z\.]+@[\-0-9a-zA-Z\.]+", 0, ""),
+        (r"@[a-zA-Z][0-9a-zA-Z]*", 0, ""),
     ]
 
     def __init__(self):
