@@ -72,8 +72,8 @@ class Basic(object):
         if len(self.sentence) == 0:
             return False
 
-        return self.TAIL_SYMBLE_RE.match(self.sentence[-1]) and \
-            not self.TAIL_SYMBOLE_RE.match(char)
+        return self.TAIL_SYMBOL_RE.match(self.sentence[-1]) and \
+            not self.TAIL_SYMBOL_RE.match(char)
 
     def _is_open(self, char):
         return char in self.OPEN_BRACKETS
