@@ -23,7 +23,8 @@ corpus = ln.load("data",
                  )
 
 mecab = MecabWrapper(dictType="neologd")
-remover = stopword_remover.Basic(mecab)
+remover1 = stopword_remover.Basic()
+remover2 = stopword_remover.Basic(pos=True)
 
 for i in range(10):
     for cat in corpus.categories:
@@ -39,8 +40,15 @@ for i in range(10):
 
             print("")
 
-            print("Removed :", end="")
-            removed = remover.remove(tokenized_sentence)
+            print("Removed1:", end="")
+            removed = remover1.remove(tokenized_sentence)
+            for token in removed.tokenized_objects:
+                print(f"{token.word_surface}", end=" ")
+
+            print("")
+
+            print("Removed2:", end="")
+            removed = remover2.remove(tokenized_sentence)
             for token in removed.tokenized_objects:
                 print(f"{token.word_surface}", end=" ")
 
