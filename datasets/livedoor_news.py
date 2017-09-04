@@ -6,9 +6,9 @@ import re
 from datetime import datetime
 
 
-def load(directory, parse=False, cleaner=None, normalizer=None, segmenter=None):
+def load(directory, parse=False, cleaner=None, normalizer=None, segmenter=None, limit=None):
     """Load livedoor news corpus."""
-    return LivedoorNewsCorpus(directory, parse, cleaner, normalizer, segmenter)
+    return LivedoorNewsCorpus(directory, parse, cleaner, normalizer, segmenter, limit)
 
 
 class LivedoorNewsArticle(object):
@@ -77,13 +77,20 @@ class LivedoorNewsCorpus(object):
     DIRECTORY_PREFIX = "livedoor_news/text"
     IGNORE_RE = re.compile("LICENSE")
 
-    def __init__(self, directory, parse=False, cleaner=None, normalizer=None, segmenter=None):
+    def __init__(self, directory,
+                 parse=False,
+                 cleaner=None,
+                 normalizer=None,
+                 segmenter=None,
+                 limit=None,
+                 ):
         """init."""
         self.directory = directory
         self.parse = parse
         self.cleaner = cleaner
         self.normalizer = normalizer
         self.segmenter = segmenter
+        self.limit = limit
 
         self.base_path = os.path.join(directory, self.DIRECTORY_PREFIX)
         self.categories = self._get_categories()
@@ -105,10 +112,14 @@ class LivedoorNewsCorpus(object):
     def _load_category(self, category):
         self.raw_data[category] = []
         path = os.path.join(self.base_path, category)
+        count = 0
         for file in os.listdir(path):
+            if self.limit and count > self.limit / len(self.categories):
+                break
             if not self.IGNORE_RE.match(file):
                 with open(os.path.join(path, file)) as f:
                     self.raw_data[category].append(f.read())
+                    count += 1
 
     def _parse_corpus(self):
         self.articles = {}
