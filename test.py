@@ -5,6 +5,7 @@ import datasets.livedoor_news as ln
 from preprocessor import cleaner
 from preprocessor import normalizer
 from preprocessor import segmenter
+from preprocessor import stopword_remover
 
 from JapaneseTokenizer import MecabWrapper
 
@@ -22,6 +23,7 @@ corpus = ln.load("data",
                  )
 
 mecab = MecabWrapper(dictType="neologd")
+remover = stopword_remover.Basic(mecab)
 
 for i in range(10):
     for cat in corpus.categories:
@@ -31,11 +33,18 @@ for i in range(10):
         for sentence in article.content:
             tokenized_sentence = mecab.tokenize(sentence=sentence)
 
-            print("[", end="")
+            print("Normal  :", end="")
             for token in tokenized_sentence.tokenized_objects:
-                print(f"{token.word_surface}:{token.word_stem}:{token.tuple_pos}", end=", ")
+                print(f"{token.word_surface}", end=" ")
 
-            print("]")
+            print("")
+
+            print("Removed :", end="")
+            removed = remover.remove(tokenized_sentence)
+            for token in removed.tokenized_objects:
+                print(f"{token.word_surface}", end=" ")
+
+            print("")
 
         print("\n================================")
         input("Continue to enter any key.")
