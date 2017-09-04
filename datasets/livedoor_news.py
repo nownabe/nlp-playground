@@ -92,6 +92,8 @@ class LivedoorNewsCorpus(object):
         self.segmenter = segmenter
         self.limit = limit
 
+        self.size = 0
+
         self.base_path = os.path.join(directory, self.DIRECTORY_PREFIX)
         self.categories = self._get_categories()
         self.raw_data = {}
@@ -120,6 +122,7 @@ class LivedoorNewsCorpus(object):
                 with open(os.path.join(path, file)) as f:
                     self.raw_data[category].append(f.read())
                     count += 1
+                    self.size += 1
 
     def _parse_corpus(self):
         self.articles = {}
